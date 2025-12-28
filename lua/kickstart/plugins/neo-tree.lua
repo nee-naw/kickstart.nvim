@@ -11,14 +11,24 @@ return {
   },
   lazy = false,
   keys = {
-    { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
+    { '<leader>e', ':Neotree reveal right toggle<CR>', desc = 'NeoTree reveal', silent = true },
+    { '<leader>b', ':Neotree toggle show buffers right<CR>', desc = 'NeoTree show buffers', silent = true },
+    { '<leader>g', ':Neotree toggle show git_status left<CR>', desc = 'NeoTree show git status', silent = true },
   },
   opts = {
     filesystem = {
       window = {
-        mappings = {
-          ['\\'] = 'close_window',
-        },
+        -- mappings = {
+        --   ['<leader>e'] = 'close_window',
+        -- },
+      },
+    },
+    event_handlers = {
+      {
+        event = 'file_opened',
+        handler = function()
+          vim.cmd ':Neotree close'
+        end,
       },
     },
   },
