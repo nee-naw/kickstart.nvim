@@ -666,6 +666,7 @@ require('lazy').setup({
   require 'kickstart.plugins.vim-css-color',
   require 'kickstart.plugins.harpoon',
   require 'kickstart.plugins.lualine',
+  require 'kickstart.plugins.zk-nvim',
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
