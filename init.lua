@@ -469,7 +469,7 @@ require('lazy').setup({
       -- Enable the following language servers
       local servers = {
         clangd = {},
-        gopls = {},
+        -- gopls = {},
         pyright = {},
         rust_analyzer = {},
         ts_ls = {},
