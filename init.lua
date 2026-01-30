@@ -70,6 +70,10 @@ vim.o.scrolloff = 10
 vim.o.confirm = true
 
 -- [[ Basic Keymaps ]]
+
+-- Make 'jk' exit Insert Mode
+vim.keymap.set('i', 'jk', '<Esc>')
+
 -- Clear highlights on search when pressing <Esc> in normal mode
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
@@ -464,7 +468,8 @@ require('lazy').setup({
         },
       }
 
-      local capabilities = require('blink.cmp').get_lsp_capabilities()
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
 
       -- Enable the following language servers
       local servers = {
@@ -483,7 +488,42 @@ require('lazy').setup({
             },
           },
         },
+
         marksman = {},
+
+        cssls = {
+          cmd = { 'vscode-css-language-server', '--stdio' },
+          filetypes = { 'css', 'scss', 'less' },
+          init_options = { provideFormatter = true }, -- needed to enable formatting capabilities
+          root_markers = { 'package.json', '.git' },
+          settings = {
+            css = { validate = true },
+            scss = { validate = true },
+            less = { validate = true },
+          },
+        },
+
+        html = {
+          cmd = { 'vscode-html-language-server', '--stdio' },
+          filetypes = { 'html' },
+          root_markers = { 'package.json', '.git' },
+          settings = {},
+          init_options = {
+            provideFormatter = true,
+            embeddedLanguages = { css = true, javascript = true },
+            configurationSection = { 'html', 'css', 'javascript' },
+            snippets = true,
+          },
+          capabilities = {
+            textDocument = {
+              completion = {
+                completionItem = {
+                  snippetSupport = true,
+                },
+              },
+            },
+          },
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -569,12 +609,12 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          },
         },
         opts = {},
       },
@@ -667,6 +707,8 @@ require('lazy').setup({
   require 'kickstart.plugins.harpoon',
   require 'kickstart.plugins.lualine',
   require 'kickstart.plugins.zk-nvim',
+  require 'kickstart.plugins.live-server',
+  require 'kickstart.plugins.nvim-ts-autotag',
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
